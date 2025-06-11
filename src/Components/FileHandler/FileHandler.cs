@@ -1,187 +1,96 @@
 using System;
 using System.Drawing;
-using System.IO;
-using System.Windows.Forms;
 
 namespace Image_Markup_Tool.Components.FileHandler
 {
     /// <summary>
-    /// Handles file operations for the application
+    /// Main facade for file handling operations in the Image Markup Tool
     /// </summary>
     public class FileHandler
     {
-        // Supported file formats
-        public const string PNG_EXTENSION = ".png";
-        public const string JPG_EXTENSION = ".jpg";
-        public const string JPEG_EXTENSION = ".jpeg";
-        public const string SVG_EXTENSION = ".svg";
-
-        // File dialog filter strings
-        public const string ALL_SUPPORTED_FILTER = "Image Files|*.png;*.jpg;*.jpeg;*.svg";
-        public const string PNG_FILTER = "PNG Files (*.png)|*.png";
-        public const string JPG_FILTER = "JPEG Files (*.jpg;*.jpeg)|*.jpg;*.jpeg";
-        public const string SVG_FILTER = "SVG Files (*.svg)|*.svg";
-        public const string ALL_FILTER = "All Files (*.*)|*.*";
-
-        // Combined filter for open/save dialogs
-        public const string COMBINED_FILTER = ALL_SUPPORTED_FILTER + "|" + PNG_FILTER + "|" + JPG_FILTER + "|" + SVG_FILTER + "|" + ALL_FILTER;
+        // File operation instances
+        private readonly OpenFileOperation _openFileOperation;
+        private readonly NewFromClipboardOperation _newFromClipboardOperation;
+        private readonly SaveFileOperation _saveFileOperation;
+        private readonly SaveAsFileOperation _saveAsFileOperation;
+        private readonly ExportFileOperation _exportFileOperation;
 
         /// <summary>
-        /// Opens a file dialog to select an image file
+        /// Initializes a new instance of the FileHandler class
         /// </summary>
-        /// <param name="statusCallback">Callback to update status after file is opened</param>
-        /// <returns>Path to the selected file, or null if canceled</returns>
-        public string OpenFile(Action<string> statusCallback = null)
+        public FileHandler()
         {
-            using (OpenFileDialog openFileDialog = new OpenFileDialog())
-            {
-                openFileDialog.Filter = COMBINED_FILTER;
-                openFileDialog.Title = "Open Image File";
-
-                if (openFileDialog.ShowDialog() == DialogResult.OK)
-                {
-                    try
-                    {
-                        string filePath = openFileDialog.FileName;
-                        
-                        // Call the status callback if provided
-                        statusCallback?.Invoke($"Opened: {Path.GetFileName(filePath)}");
-                        
-                        return filePath;
-                    }
-                    catch (Exception ex)
-                    {
-                        MessageBox.Show($"Error opening file: {ex.Message}", "Error", MessageBoxButtons.OK, MessageBoxIcon.Error);
-                    }
-                }
-            }
-            
-            return null;
+            _openFileOperation = new OpenFileOperation();
+            _newFromClipboardOperation = new NewFromClipboardOperation();
+            _saveFileOperation = new SaveFileOperation();
+            _saveAsFileOperation = new SaveAsFileOperation();
+            _exportFileOperation = new ExportFileOperation();
         }
 
         /// <summary>
-        /// Loads an image from a file
+        /// Opens an image file
         /// </summary>
-        /// <param name="filePath">Path to the image file</param>
-        /// <returns>The loaded image or null if failed</returns>
-        public Image LoadImage(string filePath)
+        /// <param name="statusCallback">Callback to update status after operation</param>
+        /// <returns>Operation result containing the opened image and file path</returns>
+        public FileOperationResult OpenFile(Action<string> statusCallback = null)
         {
-            if (string.IsNullOrEmpty(filePath) || !File.Exists(filePath))
-                return null;
-
-            try
-            {
-                string extension = Path.GetExtension(filePath).ToLower();
-                
-                // Handle different file types
-                switch (extension)
-                {
-                    case PNG_EXTENSION:
-                    case JPG_EXTENSION:
-                    case JPEG_EXTENSION:
-                        return Image.FromFile(filePath);
-                        
-                    case SVG_EXTENSION:
-                        // TODO: Implement SVG loading
-                        MessageBox.Show("SVG loading not yet implemented", "Information", MessageBoxButtons.OK, MessageBoxIcon.Information);
-                        return null;
-                        
-                    default:
-                        MessageBox.Show($"Unsupported file format: {extension}", "Error", MessageBoxButtons.OK, MessageBoxIcon.Error);
-                        return null;
-                }
-            }
-            catch (Exception ex)
-            {
-                MessageBox.Show($"Error loading image: {ex.Message}", "Error", MessageBoxButtons.OK, MessageBoxIcon.Error);
-                return null;
-            }
+            return _openFileOperation.Execute(null, null, statusCallback);
         }
 
         /// <summary>
-        /// Opens a save file dialog to save an image
+        /// Creates a new image from clipboard content
         /// </summary>
-        /// <param name="defaultExtension">Default file extension</param>
-        /// <param name="statusCallback">Callback to update status after file is saved</param>
-        /// <returns>Path where the file should be saved, or null if canceled</returns>
-        public string SaveFile(string defaultExtension = PNG_EXTENSION, Action<string> statusCallback = null)
+        /// <param name="statusCallback">Callback to update status after operation</param>
+        /// <returns>Operation result containing the new image from clipboard</returns>
+        public FileOperationResult NewFromClipboard(Action<string> statusCallback = null)
         {
-            using (SaveFileDialog saveFileDialog = new SaveFileDialog())
-            {
-                saveFileDialog.Filter = COMBINED_FILTER;
-                saveFileDialog.Title = "Save Image";
-                saveFileDialog.DefaultExt = defaultExtension;
-                
-                if (defaultExtension == PNG_EXTENSION)
-                    saveFileDialog.FilterIndex = 2; // PNG filter index
-                else if (defaultExtension == JPG_EXTENSION || defaultExtension == JPEG_EXTENSION)
-                    saveFileDialog.FilterIndex = 3; // JPG filter index
-                else if (defaultExtension == SVG_EXTENSION)
-                    saveFileDialog.FilterIndex = 4; // SVG filter index
-
-                if (saveFileDialog.ShowDialog() == DialogResult.OK)
-                {
-                    try
-                    {
-                        string filePath = saveFileDialog.FileName;
-                        
-                        // Call the status callback if provided
-                        statusCallback?.Invoke($"Saved: {Path.GetFileName(filePath)}");
-                        
-                        return filePath;
-                    }
-                    catch (Exception ex)
-                    {
-                        MessageBox.Show($"Error preparing to save file: {ex.Message}", "Error", MessageBoxButtons.OK, MessageBoxIcon.Error);
-                    }
-                }
-            }
-            
-            return null;
+            return _newFromClipboardOperation.Execute(null, null, statusCallback);
         }
 
         /// <summary>
-        /// Exports an image to a file
+        /// Saves an image to its current file path or prompts for a new one if none exists
+        /// </summary>
+        /// <param name="image">The image to save</param>
+        /// <param name="currentFilePath">The current file path, if any</param>
+        /// <param name="statusCallback">Callback to update status after operation</param>
+        /// <returns>Operation result containing the saved image and file path</returns>
+        public FileOperationResult SaveFile(Image image, string currentFilePath = null, Action<string> statusCallback = null)
+        {
+            return _saveFileOperation.Execute(image, currentFilePath, statusCallback);
+        }
+
+        /// <summary>
+        /// Saves an image to a new file location
+        /// </summary>
+        /// <param name="image">The image to save</param>
+        /// <param name="statusCallback">Callback to update status after operation</param>
+        /// <returns>Operation result containing the saved image and new file path</returns>
+        public FileOperationResult SaveFileAs(Image image, Action<string> statusCallback = null)
+        {
+            return _saveAsFileOperation.Execute(image, null, statusCallback);
+        }
+
+        /// <summary>
+        /// Exports an image to a file (PNG or JPG only)
         /// </summary>
         /// <param name="image">The image to export</param>
-        /// <param name="filePath">Path where to save the image</param>
-        /// <returns>True if successful, false otherwise</returns>
-        public bool ExportImage(Image image, string filePath)
+        /// <param name="currentFilePath">The current file path, if any</param>
+        /// <param name="statusCallback">Callback to update status after operation</param>
+        /// <returns>Operation result containing the export status</returns>
+        public FileOperationResult ExportFile(Image image, string currentFilePath = null, Action<string> statusCallback = null)
         {
-            if (image == null || string.IsNullOrEmpty(filePath))
-                return false;
+            return _exportFileOperation.Execute(image, currentFilePath, statusCallback);
+        }
 
-            try
-            {
-                string extension = Path.GetExtension(filePath).ToLower();
-                
-                // Handle different file types
-                switch (extension)
-                {
-                    case PNG_EXTENSION:
-                        image.Save(filePath, System.Drawing.Imaging.ImageFormat.Png);
-                        return true;
-                        
-                    case JPG_EXTENSION:
-                    case JPEG_EXTENSION:
-                        image.Save(filePath, System.Drawing.Imaging.ImageFormat.Jpeg);
-                        return true;
-                        
-                    case SVG_EXTENSION:
-                        // TODO: Implement SVG export
-                        MessageBox.Show("SVG export not yet implemented", "Information", MessageBoxButtons.OK, MessageBoxIcon.Information);
-                        return false;
-                        
-                    default:
-                        MessageBox.Show($"Unsupported file format for export: {extension}", "Error", MessageBoxButtons.OK, MessageBoxIcon.Error);
-                        return false;
-                }
-            }
-            catch (Exception ex)
-            {
-                MessageBox.Show($"Error exporting image: {ex.Message}", "Error", MessageBoxButtons.OK, MessageBoxIcon.Error);
-                return false;
-            }
+        /// <summary>
+        /// Convenience method for accessing file extension constants
+        /// </summary>
+        public static class Extensions
+        {
+            public static string PNG => FileHandlerUtilities.PNG_EXTENSION;
+            public static string JPG => FileHandlerUtilities.JPG_EXTENSION;
+            public static string JPEG => FileHandlerUtilities.JPEG_EXTENSION;
+            public static string SVG => FileHandlerUtilities.SVG_EXTENSION;
         }
     }
 }

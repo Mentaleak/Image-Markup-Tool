@@ -46,15 +46,19 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="Components\Dialogs\UnsavedChangesDialog.cs" />
+    <Compile Include="Components\FileHandler\ExportFileOperation.cs" />
     <Compile Include="Components\FileHandler\FileHandler.cs" />
+    <Compile Include="Components\FileHandler\FileHandlerUtilities.cs" />
+    <Compile Include="Components\FileHandler\IFileOperation.cs" />
+    <Compile Include="Components\FileHandler\NewFromClipboardOperation.cs" />
+    <Compile Include="Components\FileHandler\OpenFileOperation.cs" />
+    <Compile Include="Components\FileHandler\SaveAsFileOperation.cs" />
+    <Compile Include="Components\FileHandler\SaveFileOperation.cs" />
     <Compile Include="MainForm.cs">
       <SubType>Form</SubType>
     </Compile>
     <Compile Include="MainForm.Designer.cs">
-      <DependentUpon>MainForm.cs</DependentUpon>
-    </Compile>
-    <Compile Include="MainForm.File.cs">
-      <SubType>Form</SubType>
       <DependentUpon>MainForm.cs</DependentUpon>
     </Compile>
     <Compile Include="Program.cs" />
@@ -86,7 +90,6 @@
     <None Include="App.config" />
   </ItemGroup>
   <ItemGroup>
-    <Folder Include="Components\Dialogs\" />
     <Folder Include="Components\Panels\" />
     <Folder Include="Components\Tools\" />
     <Folder Include="Models\" />
