@@ -48,16 +48,23 @@ namespace Image_Markup_Tool
             this.layerPanel.SuspendLayout();
             this.SuspendLayout();
             
-            // 
-            // menuStrip
-            // 
-            this.menuStrip.Items.AddRange(new System.Windows.Forms.ToolStripItem[] {
-            this.helpToolStripMenuItem});
-            this.menuStrip.Location = new System.Drawing.Point(0, 0);
-            this.menuStrip.Name = "menuStrip";
-            this.menuStrip.Size = new System.Drawing.Size(1024, 24);
-            this.menuStrip.TabIndex = 0;
-            this.menuStrip.Text = "menuStrip1";
+          // 
+// menuStrip
+// 
+this.menuStrip.Location = new System.Drawing.Point(0, 0);
+this.menuStrip.Name = "menuStrip";
+this.menuStrip.Size = new System.Drawing.Size(1024, 24);
+this.menuStrip.TabIndex = 0;
+this.menuStrip.Text = "menuStrip1";
+
+// Clear any existing items
+this.menuStrip.Items.Clear();
+
+// Add the file menu first
+this.fileMenuControl.AddToMenuStrip(this.menuStrip);
+
+// Then add the help menu
+this.menuStrip.Items.Add(this.helpToolStripMenuItem);
             
             // 
             // helpToolStripMenuItem

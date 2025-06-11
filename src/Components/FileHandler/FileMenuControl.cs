@@ -18,12 +18,31 @@ namespace Image_Markup_Tool.Components.FileHandler
             InitializeComponent();
         }
         
-        // Method to add this control's menu items to a menu strip
-        public void AddToMenuStrip(MenuStrip menuStrip)
+        /// <summary>
+        /// Adds this control's menu items to a menu strip at the specified index
+        /// </summary>
+        /// <param name="menuStrip">The menu strip to add to</param>
+        /// <param name="index">The index at which to insert the menu item (default is 0, which is the first position)</param>
+        public void AddToMenuStrip(MenuStrip menuStrip, int index = 0)
         {
             if (menuStrip == null) throw new ArgumentNullException(nameof(menuStrip));
-            menuStrip.Items.Add(fileMenuItem);
+            
+            // Insert at the specified index
+            if (index >= 0 && index <= menuStrip.Items.Count)
+            {
+                menuStrip.Items.Insert(index, fileMenuItem);
+            }
+            else
+            {
+                // If index is out of range, just add to the end
+                menuStrip.Items.Add(fileMenuItem);
+            }
         }
+        
+        /// <summary>
+        /// Gets the File menu item for direct manipulation
+        /// </summary>
+        public ToolStripMenuItem FileMenuItem => fileMenuItem;
         
         // Properties to enable/disable menu items
         public bool SaveEnabled
