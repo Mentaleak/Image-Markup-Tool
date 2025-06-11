@@ -1,75 +1,140 @@
 using System;
-using System.IO;
 using System.Windows.Forms;
 
 namespace Image_Markup_Tool.Components.FileHandler
 {
     /// <summary>
-    /// Utilities and constants for file handling operations
+    /// Utility methods for file handling operations
     /// </summary>
     public static class FileHandlerUtilities
     {
-        // Supported file formats
+        // File extension constants (with dots)
         public const string PNG_EXTENSION = ".png";
         public const string JPG_EXTENSION = ".jpg";
         public const string JPEG_EXTENSION = ".jpeg";
+        public const string BMP_EXTENSION = ".bmp";
+        public const string GIF_EXTENSION = ".gif";
         public const string SVG_EXTENSION = ".svg";
-
-        // File dialog filter strings
-        public const string ALL_SUPPORTED_FILTER = "Image Files|*.png;*.jpg;*.jpeg;*.svg";
-        public const string PNG_FILTER = "PNG Files (*.png)|*.png";
-        public const string JPG_FILTER = "JPEG Files (*.jpg;*.jpeg)|*.jpg;*.jpeg";
-        public const string SVG_FILTER = "SVG Files (*.svg)|*.svg";
-        public const string ALL_FILTER = "All Files (*.*)|*.*";
-
-        // Combined filter for open/save dialogs
-        public const string COMBINED_FILTER = ALL_SUPPORTED_FILTER + "|" + PNG_FILTER + "|" + JPG_FILTER + "|" + SVG_FILTER + "|" + ALL_FILTER;
         
-        // Export filter - only PNG and JPG
-        public const string EXPORT_FILTER = PNG_FILTER + "|" + JPG_FILTER;
-
+        // Filter strings for file dialogs
+        public const string IMAGE_FILTER = "Image Files|*.jpg;*.jpeg;*.png;*.bmp;*.gif";
+        public const string SVG_FILTER = "SVG Files|*.svg";
+        public const string ALL_FILES_FILTER = "All Files|*.*";
+        public const string COMBINED_FILTER = "All Supported Files|*.jpg;*.jpeg;*.png;*.bmp;*.gif;*.svg|PNG Files|*.png|JPEG Files|*.jpg;*.jpeg|SVG Files|*.svg|All Files|*.*";
+        
+        // Individual format filters
+        public const string PNG_FILTER = "PNG Files|*.png";
+        public const string JPG_FILTER = "JPEG Files|*.jpg;*.jpeg";
+        public const string BMP_FILTER = "BMP Files|*.bmp";
+        public const string GIF_FILTER = "GIF Files|*.gif";
+        
+        // Export-specific filter (PNG and JPG only)
+        public const string EXPORT_FILTER = "PNG Image|*.png|JPEG Image|*.jpg;*.jpeg";
+        
         /// <summary>
-        /// Shows an error message dialog
+        /// Shows an information message to the user
         /// </summary>
-        /// <param name="message">The error message</param>
-        /// <param name="ex">Optional exception for detailed error information</param>
-        public static void ShowError(string message, Exception ex = null)
-        {
-            string detailedMessage = ex != null ? $"{message}: {ex.Message}" : message;
-            MessageBox.Show(detailedMessage, "Error", MessageBoxButtons.OK, MessageBoxIcon.Error);
-        }
-
-        /// <summary>
-        /// Shows an information message dialog
-        /// </summary>
-        /// <param name="message">The information message</param>
+        /// <param name="message">The message to display</param>
         public static void ShowInfo(string message)
         {
             MessageBox.Show(message, "Information", MessageBoxButtons.OK, MessageBoxIcon.Information);
         }
-
+        
         /// <summary>
-        /// Gets the appropriate image format based on file extension
+        /// Shows an error message to the user
         /// </summary>
-        /// <param name="filePath">Path to the file</param>
-        /// <returns>The System.Drawing.Imaging.ImageFormat for the file</returns>
-        public static System.Drawing.Imaging.ImageFormat GetImageFormat(string filePath)
+        /// <param name="message">The error message to display</param>
+        public static void ShowError(string message)
         {
-            string extension = Path.GetExtension(filePath).ToLower();
+            MessageBox.Show(message, "Error", MessageBoxButtons.OK, MessageBoxIcon.Error);
+        }
+        
+        /// <summary>
+        /// Shows an error message to the user with exception details
+        /// </summary>
+        /// <param name="message">The error message to display</param>
+        /// <param name="ex">The exception that occurred</param>
+        public static void ShowError(string message, Exception ex)
+        {
+            MessageBox.Show($"{message}: {ex.Message}", "Error", MessageBoxButtons.OK, MessageBoxIcon.Error);
+        }
+        
+        /// <summary>
+        /// Shows a warning message to the user
+        /// </summary>
+        /// <param name="message">The warning message to display</param>
+        /// <returns>The dialog result (OK/Cancel)</returns>
+        public static DialogResult ShowWarning(string message)
+        {
+            return MessageBox.Show(message, "Warning", MessageBoxButtons.OKCancel, MessageBoxIcon.Warning);
+        }
+        
+        /// <summary>
+        /// Gets the appropriate file filter string for Open/Save dialogs based on operation type
+        /// </summary>
+        /// <param name="includeAllFiles">Whether to include the "All Files" filter</param>
+        /// <param name="operationType">The type of file operation</param>
+        /// <returns>A filter string for file dialogs</returns>
+        public static string GetFileFilter(bool includeAllFiles = true, FileOperationType operationType = FileOperationType.Open)
+        {
+            string filter = "";
             
-            switch (extension)
+            switch (operationType)
             {
-                case PNG_EXTENSION:
-                    return System.Drawing.Imaging.ImageFormat.Png;
+                case FileOperationType.Open:
+                case FileOperationType.Import:
+                    filter = IMAGE_FILTER;
+                    break;
                     
-                case JPG_EXTENSION:
-                case JPEG_EXTENSION:
-                    return System.Drawing.Imaging.ImageFormat.Jpeg;
+                case FileOperationType.Save:
+                case FileOperationType.SaveAs:
+                    filter = SVG_FILTER;
+                    break;
+                    
+                case FileOperationType.Export:
+                    filter = EXPORT_FILTER;  // Now using the constant instead of hardcoded string
+                    break;
+            }
+            
+            if (includeAllFiles)
+            {
+                filter += "|" + ALL_FILES_FILTER;
+            }
+            
+            return filter;
+        }
+        
+        /// <summary>
+        /// Gets the default extension for a file operation
+        /// </summary>
+        /// <param name="operationType">The type of file operation</param>
+        /// <returns>The default file extension (with dot)</returns>
+        public static string GetDefaultExtension(FileOperationType operationType)
+        {
+            switch (operationType)
+            {
+                case FileOperationType.Save:
+                case FileOperationType.SaveAs:
+                    return SVG_EXTENSION;
+                    
+                case FileOperationType.Export:
+                    return PNG_EXTENSION;
                     
                 default:
-                    // Default to PNG if unknown
-                    return System.Drawing.Imaging.ImageFormat.Png;
+                    return "";
             }
         }
+    }
+    
+    /// <summary>
+    /// Defines the types of file operations
+    /// </summary>
+    public enum FileOperationType
+    {
+        Open,
+        Import,
+        Save,
+        SaveAs,
+        Export
     }
 }

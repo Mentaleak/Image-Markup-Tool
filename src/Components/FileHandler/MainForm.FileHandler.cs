@@ -34,6 +34,9 @@ namespace Image_Markup_Tool
                 
                 // Reset unsaved changes flag
                 _hasUnsavedChanges = false;
+                
+                // Update menu item states
+                UpdateFileMenuState();
             }
         }
         
