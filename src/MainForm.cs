@@ -1,11 +1,5 @@
 using System;
-using System.Collections.Generic;
-using System.ComponentModel;
-using System.Data;
 using System.Drawing;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 using System.Windows.Forms;
 
 namespace Image_Markup_Tool
@@ -15,74 +9,24 @@ namespace Image_Markup_Tool
         // Panel sizes from PRD
         private const int TOOL_PANEL_WIDTH = 70;
         private const int LAYER_PANEL_WIDTH = 132;
+        
+        // Services
+        private readonly Services.FileService _fileService;
+        
+        // Current loaded image
+        private Image _currentImage;
 
         public MainForm()
         {
             InitializeComponent();
             
+            // Initialize services
+            _fileService = new Services.FileService();
+            
             // Apply dark mode theme
-            ApplyDarkTheme();
-            
-            // Set up menu renderer for grey highlight
-            menuStrip.Renderer = new CustomMenuRenderer();
-        }
-
-        /// <summary>
-        /// Applies dark theme to the application
-        /// </summary>
-        private void ApplyDarkTheme()
-        {
-            // Dark theme colors
-            Color darkBackground = Color.FromArgb(30, 30, 30);
-            Color darkPanelBackground = Color.FromArgb(45, 45, 48);
-            Color darkText = Color.FromArgb(240, 240, 240);
-            
-            // Apply dark theme to form
-            this.BackColor = darkBackground;
-            this.ForeColor = darkText;
-            
-            // Apply to menu
-            menuStrip.BackColor = darkPanelBackground;
-            menuStrip.ForeColor = darkText;
-            foreach (ToolStripMenuItem item in menuStrip.Items)
-            {
-                ApplyDarkThemeToMenuItem(item);
-            }
-            
-            // Apply to panels
-            toolPanel.BackColor = darkPanelBackground;
-            editorPanel.BackColor = darkBackground;
-            layerPanel.BackColor = darkPanelBackground;
-            
-            // Apply to status bar
-            statusStrip.BackColor = darkPanelBackground;
-            statusStrip.ForeColor = darkText;
-        }
-        
-        /// <summary>
-        /// Recursively applies dark theme to menu items
-        /// </summary>
-        private void ApplyDarkThemeToMenuItem(ToolStripMenuItem item)
-        {
-            // Dark theme colors
-            Color darkDropdownBackground = Color.FromArgb(45, 45, 48);
-            Color darkText = Color.FromArgb(240, 240, 240);
-            
-            item.BackColor = darkDropdownBackground;
-            item.ForeColor = darkText;
-            
-            foreach (ToolStripItem subItem in item.DropDownItems)
-            {
-                if (subItem is ToolStripMenuItem menuSubItem)
-                {
-                    ApplyDarkThemeToMenuItem(menuSubItem);
-                }
-                else
-                {
-                    subItem.BackColor = darkDropdownBackground;
-                    subItem.ForeColor = darkText;
-                }
-            }
+            Styles.DarkTheme.ApplyToForm(this);
+            Styles.DarkTheme.ApplyToMenuStrip(menuStrip);
+            Styles.DarkTheme.ApplyToStatusStrip(statusStrip);
         }
 
         /// <summary>
@@ -115,64 +59,77 @@ namespace Image_Markup_Tool
         /// </summary>
         private void openToolStripMenuItem_Click(object sender, EventArgs e)
         {
-            using (OpenFileDialog openFileDialog = new OpenFileDialog())
+            string filePath = _fileService.OpenFile(status => statusLabel.Text = status);
+            
+            if (!string.IsNullOrEmpty(filePath))
             {
-                openFileDialog.Filter = "Image Files|*.png;*.jpg;*.jpeg;*.svg|PNG Files (*.png)|*.png|JPEG Files (*.jpg;*.jpeg)|*.jpg;*.jpeg|SVG Files (*.svg)|*.svg";
-                openFileDialog.Title = "Open Image File";
-
-                if (openFileDialog.ShowDialog() == DialogResult.OK)
+                // Load the image into the editor
+                Image image = _fileService.LoadImage(filePath);
+                if (image != null)
                 {
-                    try
-                    {
-                        // TODO: Implement file opening logic
-                        string filePath = openFileDialog.FileName;
-                        string fileExtension = System.IO.Path.GetExtension(filePath).ToLower();
-                        
-                        // Update status bar
-                        statusLabel.Text = $"Opened: {System.IO.Path.GetFileName(filePath)}";
-                    }
-                    catch (Exception ex)
-                    {
-                        MessageBox.Show($"Error opening file: {ex.Message}", "Error", MessageBoxButtons.OK, MessageBoxIcon.Error);
-                    }
+                    // Display the image in the editor
+                    DisplayImage(image);
+                    
+                    // Update window title with filename
+                    this.Text = $"Image Markup Tool - {System.IO.Path.GetFileName(filePath)}";
                 }
             }
         }
-    }
-
-    /// <summary>
-    /// Custom menu renderer to provide grey highlight for menu items
-    /// </summary>
-    public class CustomMenuRenderer : ToolStripProfessionalRenderer
-    {
-        public CustomMenuRenderer() : base(new CustomColorTable())
+        
+        /// <summary>
+        /// Displays an image in the editor
+        /// </summary>
+        /// <param name="image">The image to display</param>
+        private void DisplayImage(Image image)
         {
+            try
+            {
+                // Clean up previous image if exists
+                if (_currentImage != null)
+                {
+                    editorPictureBox.Image = null;
+                    _currentImage.Dispose();
+                    _currentImage = null;
+                }
+                
+                // Set the new image
+                _currentImage = image;
+                editorPictureBox.Image = _currentImage;
+                
+                // Adjust PictureBox settings for best display
+                AdjustPictureBoxSettings();
+                
+                // TODO: Create initial layer for the image
+                // This would be implemented when layer management is added
+            }
+            catch (Exception ex)
+            {
+                MessageBox.Show($"Error displaying image: {ex.Message}", "Error", MessageBoxButtons.OK, MessageBoxIcon.Error);
+            }
         }
-    }
-
-    /// <summary>
-    /// Custom color table for menu rendering with grey highlight
-    /// </summary>
-    public class CustomColorTable : ProfessionalColorTable
-    {
-        // Grey highlight color
-        private Color menuHighlightColor = Color.FromArgb(70, 70, 70);
         
-        public override Color MenuItemSelected => menuHighlightColor;
-        public override Color MenuItemSelectedGradientBegin => menuHighlightColor;
-        public override Color MenuItemSelectedGradientEnd => menuHighlightColor;
-        
-        public override Color MenuItemPressedGradientBegin => menuHighlightColor;
-        public override Color MenuItemPressedGradientEnd => menuHighlightColor;
-        
-        public override Color MenuItemBorder => Color.FromArgb(60, 60, 60);
-        
-        public override Color MenuBorder => Color.FromArgb(45, 45, 48);
-        
-        public override Color ToolStripDropDownBackground => Color.FromArgb(45, 45, 48);
-        
-        public override Color ImageMarginGradientBegin => Color.FromArgb(45, 45, 48);
-        public override Color ImageMarginGradientMiddle => Color.FromArgb(45, 45, 48);
-        public override Color ImageMarginGradientEnd => Color.FromArgb(45, 45, 48);
+        /// <summary>
+        /// Adjusts PictureBox settings based on the loaded image
+        /// </summary>
+        private void AdjustPictureBoxSettings()
+        {
+            if (_currentImage == null)
+                return;
+                
+            // Choose the appropriate SizeMode based on image size vs. container size
+            if (_currentImage.Width > editorPanel.Width || _currentImage.Height > editorPanel.Height)
+            {
+                // Image is larger than the panel, use Zoom to fit it
+                editorPictureBox.SizeMode = PictureBoxSizeMode.Zoom;
+            }
+            else
+            {
+                // Image is smaller than the panel, center it
+                editorPictureBox.SizeMode = PictureBoxSizeMode.CenterImage;
+            }
+            
+            // Update status bar with image dimensions
+            statusLabel.Text = $"Image dimensions: {_currentImage.Width} x {_currentImage.Height} pixels";
+        }
     }
 }

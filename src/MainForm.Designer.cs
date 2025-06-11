@@ -39,10 +39,13 @@ namespace Image_Markup_Tool
             this.statusLabel = new System.Windows.Forms.ToolStripStatusLabel();
             this.toolPanel = new System.Windows.Forms.Panel();
             this.editorPanel = new System.Windows.Forms.Panel();
+            this.editorPictureBox = new System.Windows.Forms.PictureBox();
             this.layerPanel = new System.Windows.Forms.Panel();
             this.layerPanelLabel = new System.Windows.Forms.Label();
             this.menuStrip.SuspendLayout();
             this.statusStrip.SuspendLayout();
+            this.editorPanel.SuspendLayout();
+            ((System.ComponentModel.ISupportInitialize)(this.editorPictureBox)).BeginInit();
             this.layerPanel.SuspendLayout();
             this.SuspendLayout();
             // 
@@ -131,10 +134,24 @@ namespace Image_Markup_Tool
             | System.Windows.Forms.AnchorStyles.Left) 
             | System.Windows.Forms.AnchorStyles.Right)));
             this.editorPanel.BackColor = System.Drawing.Color.FromArgb(((int)(((byte)(30)))), ((int)(((byte)(30)))), ((int)(((byte)(30)))));
+            this.editorPanel.Controls.Add(this.editorPictureBox);
             this.editorPanel.Location = new System.Drawing.Point(70, 24);
             this.editorPanel.Name = "editorPanel";
             this.editorPanel.Size = new System.Drawing.Size(822, 715);
             this.editorPanel.TabIndex = 3;
+            // 
+            // editorPictureBox
+            // 
+            this.editorPictureBox.Anchor = ((System.Windows.Forms.AnchorStyles)((((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Bottom) 
+            | System.Windows.Forms.AnchorStyles.Left) 
+            | System.Windows.Forms.AnchorStyles.Right)));
+            this.editorPictureBox.BackColor = System.Drawing.Color.FromArgb(((int)(((byte)(30)))), ((int)(((byte)(30)))), ((int)(((byte)(30)))));
+            this.editorPictureBox.Location = new System.Drawing.Point(0, 0);
+            this.editorPictureBox.Name = "editorPictureBox";
+            this.editorPictureBox.Size = new System.Drawing.Size(822, 715);
+            this.editorPictureBox.SizeMode = System.Windows.Forms.PictureBoxSizeMode.Zoom;
+            this.editorPictureBox.TabIndex = 0;
+            this.editorPictureBox.TabStop = false;
             // 
             // layerPanel
             // 
@@ -176,6 +193,8 @@ namespace Image_Markup_Tool
             this.menuStrip.PerformLayout();
             this.statusStrip.ResumeLayout(false);
             this.statusStrip.PerformLayout();
+            this.editorPanel.ResumeLayout(false);
+            ((System.ComponentModel.ISupportInitialize)(this.editorPictureBox)).EndInit();
             this.layerPanel.ResumeLayout(false);
             this.layerPanel.PerformLayout();
             this.ResumeLayout(false);
@@ -198,5 +217,6 @@ namespace Image_Markup_Tool
         private System.Windows.Forms.Panel layerPanel;
         private System.Windows.Forms.Label layerPanelLabel;
         private System.Windows.Forms.ToolStripMenuItem openToolStripMenuItem;
+        private System.Windows.Forms.PictureBox editorPictureBox;
     }
 }

@@ -132,11 +132,29 @@ The Solution is located "src\Image-Markup-Tool.sln"
 
 ### Folder Structure
 The application will be organized into a hierarchical folder structure:
-- `/components`: Reusable UI components
-  - `/tools`: Individual tool implementations
-  - `/panels`: Panel components (tool panel, layer panel)
-  - `/dialogs`: Dialog components (color picker, text editor)
-- `/models`: Data models for application entities
-- `/services`: Application services (file handling, rendering)
-- `/utils`: Utility functions and helpers
-- `/styles`: Styling definitions and themes
+- `/Components`: Reusable UI components
+  - `/Tools`: Individual tool implementations
+  - `/Panels`: Panel components (tool panel, layer panel)
+  - `/Dialogs`: Dialog components (color picker, text editor)
+- `/Models`: Data models for application entities
+- `/Services`: Application services
+  - `FileService.cs`: Handles file operations (open, save, export)
+  - Additional services for rendering, layer management, etc.
+- `/Utils`: Utility functions and helpers
+- `/Styles`: Styling definitions and themes
+  - `DarkTheme.cs`: Provides dark theme styling for the application
+
+### Implementation Details
+
+#### Styles
+The application uses a modular approach to styling:
+- Theme-related functionality is encapsulated in the `DarkTheme` class in the `Styles` folder
+- This provides consistent dark theme styling across the application
+- The theme can be easily modified or extended without changing UI component code
+
+#### File Handling
+File operations are managed through a dedicated service:
+- The `FileService` class in the `Services` folder handles all file operations
+- Supports opening PNG, JPG, and SVG files
+- Provides methods for saving and exporting in different formats
+- Encapsulates file dialog logic and error handling
