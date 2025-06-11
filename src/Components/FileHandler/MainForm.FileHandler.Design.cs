@@ -4,22 +4,22 @@
     {
         private void InitializeFileHandlerComponent()
         {
-
             // 
             // fileToolStripMenuItem
             // 
             this.fileToolStripMenuItem.DropDownItems.AddRange(new System.Windows.Forms.ToolStripItem[] {
-            this.newFromClipboardToolStripMenuItem,
-            this.openToolStripMenuItem,
-            this.importToolStripMenuItem,
-            this.toolStripSeparator1,
-            this.saveToolStripMenuItem,
-            this.saveAsToolStripMenuItem,
-            this.exportToolStripMenuItem
-    });
+                this.newFromClipboardToolStripMenuItem,
+                this.openToolStripMenuItem,
+                this.importToolStripMenuItem,
+                this.toolStripSeparator1,
+                this.saveToolStripMenuItem,
+                this.saveAsToolStripMenuItem,
+                this.exportToolStripMenuItem
+            });
             this.fileToolStripMenuItem.Name = "fileToolStripMenuItem";
             this.fileToolStripMenuItem.Size = new System.Drawing.Size(37, 20);
             this.fileToolStripMenuItem.Text = "File";
+            
             // 
             // newFromClipboardToolStripMenuItem
             // 
@@ -28,6 +28,7 @@
             this.newFromClipboardToolStripMenuItem.Size = new System.Drawing.Size(227, 22);
             this.newFromClipboardToolStripMenuItem.Text = "New From Clipboard";
             this.newFromClipboardToolStripMenuItem.Click += new System.EventHandler(this.newFromClipboardToolStripMenuItem_Click);
+            
             // 
             // openToolStripMenuItem
             // 
@@ -36,6 +37,21 @@
             this.openToolStripMenuItem.Size = new System.Drawing.Size(227, 22);
             this.openToolStripMenuItem.Text = "Open SVG";
             this.openToolStripMenuItem.Click += new System.EventHandler(this.openToolStripMenuItem_Click);
+            
+            // 
+            // importToolStripMenuItem
+            // 
+            this.importToolStripMenuItem.Name = "importToolStripMenuItem";
+            this.importToolStripMenuItem.Size = new System.Drawing.Size(227, 22);
+            this.importToolStripMenuItem.Text = "Import";
+            this.importToolStripMenuItem.Click += new System.EventHandler(this.importToolStripMenuItem_Click);
+            
+            // 
+            // toolStripSeparator1
+            // 
+            this.toolStripSeparator1.Name = "toolStripSeparator1";
+            this.toolStripSeparator1.Size = new System.Drawing.Size(224, 6);
+            
             // 
             // saveToolStripMenuItem
             // 
@@ -44,6 +60,7 @@
             this.saveToolStripMenuItem.Size = new System.Drawing.Size(227, 22);
             this.saveToolStripMenuItem.Text = "Save";
             this.saveToolStripMenuItem.Click += new System.EventHandler(this.saveToolStripMenuItem_Click);
+            
             // 
             // saveAsToolStripMenuItem
             // 
@@ -53,6 +70,7 @@
             this.saveAsToolStripMenuItem.Size = new System.Drawing.Size(227, 22);
             this.saveAsToolStripMenuItem.Text = "Save As...";
             this.saveAsToolStripMenuItem.Click += new System.EventHandler(this.saveAsToolStripMenuItem_Click);
+            
             // 
             // exportToolStripMenuItem
             // 
@@ -61,32 +79,9 @@
             this.exportToolStripMenuItem.Size = new System.Drawing.Size(227, 22);
             this.exportToolStripMenuItem.Text = "Export";
             this.exportToolStripMenuItem.Click += new System.EventHandler(this.exportToolStripMenuItem_Click);
-            // 
-            // importToolStripMenuItem
-            // 
-            this.importToolStripMenuItem.Name = "importToolStripMenuItem";
-            this.importToolStripMenuItem.Size = new System.Drawing.Size(227, 22);
-            this.importToolStripMenuItem.Text = "Import";
-            // 
-            // toolStripSeparator1
-            // 
-            this.toolStripSeparator1.Name = "toolStripSeparator1";
-            this.toolStripSeparator1.Size = new System.Drawing.Size(224, 6);
-
-            //
-            // add File menu
-            //
-            this.menuStrip.Items.AddRange(new System.Windows.Forms.ToolStripItem[] {
-            this.fileToolStripMenuItem });
+            
+            // Note: We don't add the fileToolStripMenuItem to the menuStrip here
+            // It's already added in the main InitializeComponent method
         }
-        private System.Windows.Forms.ToolStripMenuItem fileToolStripMenuItem;
-        private System.Windows.Forms.ToolStripMenuItem newFromClipboardToolStripMenuItem;
-        private System.Windows.Forms.ToolStripMenuItem saveToolStripMenuItem;
-        private System.Windows.Forms.ToolStripMenuItem saveAsToolStripMenuItem;
-        private System.Windows.Forms.ToolStripMenuItem exportToolStripMenuItem;
-        private System.Windows.Forms.ToolStripMenuItem openToolStripMenuItem;
-        private System.Windows.Forms.ToolStripMenuItem importToolStripMenuItem;
-        private System.Windows.Forms.ToolStripSeparator toolStripSeparator1;
     }
-
 }

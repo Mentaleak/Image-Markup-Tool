@@ -46,10 +46,16 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
-    <Compile Include="Components\Dialogs\UnsavedChangesDialog.cs" />
-    <Compile Include="Components\FileHandler\MainForm.FileHandler.Design.cs">
-      <SubType>Form</SubType>
+    <Compile Include="Components\FileHandler\FileMenuControl.cs">
+      <SubType>UserControl</SubType>
     </Compile>
+    <Compile Include="Components\FileHandler\FileMenuControl.Designer.cs">
+      <DependentUpon>FileMenuControl.cs</DependentUpon>
+    </Compile>
+    <EmbeddedResource Include="Components\FileHandler\FileMenuControl.resx">
+      <DependentUpon>FileMenuControl.cs</DependentUpon>
+    </EmbeddedResource>
+    <Compile Include="Components\Dialogs\UnsavedChangesDialog.cs" />
     <Compile Include="Components\FileHandler\ExportFileOperation.cs" />
     <Compile Include="Components\FileHandler\FileHandler.cs" />
     <Compile Include="Components\FileHandler\FileHandlerUtilities.cs" />

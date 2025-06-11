@@ -29,12 +29,6 @@ namespace Image_Markup_Tool
         private void InitializeComponent()
         {
             this.menuStrip = new System.Windows.Forms.MenuStrip();
-            this.fileToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
-            this.newFromClipboardToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
-            this.openToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
-            this.saveToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
-            this.saveAsToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
-            this.exportToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.helpToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.statusStrip = new System.Windows.Forms.StatusStrip();
             this.statusLabel = new System.Windows.Forms.ToolStripStatusLabel();
@@ -43,18 +37,17 @@ namespace Image_Markup_Tool
             this.editorPictureBox = new System.Windows.Forms.PictureBox();
             this.layerPanel = new System.Windows.Forms.Panel();
             this.layerPanelLabel = new System.Windows.Forms.Label();
-            this.importToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
-            this.toolStripSeparator1 = new System.Windows.Forms.ToolStripSeparator();
+            
+            // Create the file menu control
+            this.fileMenuControl = new Image_Markup_Tool.Components.FileHandler.FileMenuControl();
+            
             this.menuStrip.SuspendLayout();
             this.statusStrip.SuspendLayout();
             this.editorPanel.SuspendLayout();
             ((System.ComponentModel.ISupportInitialize)(this.editorPictureBox)).BeginInit();
             this.layerPanel.SuspendLayout();
             this.SuspendLayout();
-            //
-            //File Menu Components
-            //
-            InitializeFileHandlerComponent();
+            
             // 
             // menuStrip
             // 
@@ -65,7 +58,7 @@ namespace Image_Markup_Tool
             this.menuStrip.Size = new System.Drawing.Size(1024, 24);
             this.menuStrip.TabIndex = 0;
             this.menuStrip.Text = "menuStrip1";
-
+            
             // 
             // helpToolStripMenuItem
             // 
@@ -160,6 +153,10 @@ namespace Image_Markup_Tool
             this.Name = "MainForm";
             this.Text = "Image Markup Tool";
             this.Resize += new System.EventHandler(this.MainForm_Resize);
+            
+            // Add the file menu to the menu strip
+            this.fileMenuControl.AddToMenuStrip(this.menuStrip);
+            
             this.menuStrip.ResumeLayout(false);
             this.menuStrip.PerformLayout();
             this.statusStrip.ResumeLayout(false);
@@ -184,6 +181,8 @@ namespace Image_Markup_Tool
         private System.Windows.Forms.Panel layerPanel;
         private System.Windows.Forms.Label layerPanelLabel;
         private System.Windows.Forms.PictureBox editorPictureBox;
-
+        
+        // File menu control
+        private Image_Markup_Tool.Components.FileHandler.FileMenuControl fileMenuControl;
     }
 }

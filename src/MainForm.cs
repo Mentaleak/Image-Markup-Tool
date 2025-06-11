@@ -26,6 +26,9 @@ namespace Image_Markup_Tool
         public MainForm()
         {
             InitializeComponent();
+
+            // Connect file menu events to handlers
+            InitializeFileMenu();
             
             // Initialize components
             _fileHandler = new FileHandler();
@@ -35,8 +38,9 @@ namespace Image_Markup_Tool
             Styles.DarkTheme.ApplyToMenuStrip(menuStrip);
             Styles.DarkTheme.ApplyToStatusStrip(statusStrip);
             
-            // Wire up the import menu item click event handler
-            importToolStripMenuItem.Click += importToolStripMenuItem_Click;
+            // REMOVED: Wire up the import menu item click event handler
+            // importToolStripMenuItem.Click += importToolStripMenuItem_Click;
+            // This is now handled by the FileMenuControl
         }
 
         /// <summary>
@@ -87,6 +91,9 @@ namespace Image_Markup_Tool
                 // Adjust PictureBox settings for best display
                 AdjustPictureBoxSettings();
                 
+                // Update file menu state since we now have an image
+                UpdateFileMenuState();
+                
                 // TODO: Create initial layer for the image
                 // This would be implemented when layer management is added
             }
@@ -119,7 +126,5 @@ namespace Image_Markup_Tool
             // Update status bar with image dimensions
             statusLabel.Text = $"Image dimensions: {_currentImage.Width} x {_currentImage.Height} pixels";
         }
-
-        
     }
 }
