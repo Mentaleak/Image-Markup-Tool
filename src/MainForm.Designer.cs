@@ -63,8 +63,8 @@ namespace Image_Markup_Tool
             // fileToolStripMenuItem
             // 
             this.fileToolStripMenuItem.DropDownItems.AddRange(new System.Windows.Forms.ToolStripItem[] {
-            this.openToolStripMenuItem,
             this.newFromClipboardToolStripMenuItem,
+            this.openToolStripMenuItem,
             this.saveToolStripMenuItem,
             this.exportToolStripMenuItem});
             this.fileToolStripMenuItem.Name = "fileToolStripMenuItem";
@@ -74,26 +74,26 @@ namespace Image_Markup_Tool
             // openToolStripMenuItem
             // 
             this.openToolStripMenuItem.Name = "openToolStripMenuItem";
-            this.openToolStripMenuItem.Size = new System.Drawing.Size(180, 22);
+            this.openToolStripMenuItem.Size = new System.Drawing.Size(184, 22);
             this.openToolStripMenuItem.Text = "Open";
             this.openToolStripMenuItem.Click += new System.EventHandler(this.openToolStripMenuItem_Click);
             // 
             // newFromClipboardToolStripMenuItem
             // 
             this.newFromClipboardToolStripMenuItem.Name = "newFromClipboardToolStripMenuItem";
-            this.newFromClipboardToolStripMenuItem.Size = new System.Drawing.Size(180, 22);
+            this.newFromClipboardToolStripMenuItem.Size = new System.Drawing.Size(184, 22);
             this.newFromClipboardToolStripMenuItem.Text = "New From Clipboard";
             // 
             // saveToolStripMenuItem
             // 
             this.saveToolStripMenuItem.Name = "saveToolStripMenuItem";
-            this.saveToolStripMenuItem.Size = new System.Drawing.Size(180, 22);
+            this.saveToolStripMenuItem.Size = new System.Drawing.Size(184, 22);
             this.saveToolStripMenuItem.Text = "Save";
             // 
             // exportToolStripMenuItem
             // 
             this.exportToolStripMenuItem.Name = "exportToolStripMenuItem";
-            this.exportToolStripMenuItem.Size = new System.Drawing.Size(180, 22);
+            this.exportToolStripMenuItem.Size = new System.Drawing.Size(184, 22);
             this.exportToolStripMenuItem.Text = "Export";
             // 
             // helpToolStripMenuItem
@@ -170,7 +170,7 @@ namespace Image_Markup_Tool
             this.layerPanelLabel.ForeColor = System.Drawing.Color.White;
             this.layerPanelLabel.Location = new System.Drawing.Point(3, 10);
             this.layerPanelLabel.Name = "layerPanelLabel";
-            this.layerPanelLabel.Size = new System.Drawing.Size(41, 13);
+            this.layerPanelLabel.Size = new System.Drawing.Size(38, 13);
             this.layerPanelLabel.TabIndex = 0;
             this.layerPanelLabel.Text = "Layers";
             // 

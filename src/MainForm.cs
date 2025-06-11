@@ -1,6 +1,7 @@
 using System;
 using System.Drawing;
 using System.Windows.Forms;
+using Image_Markup_Tool.Components.FileHandler;
 
 namespace Image_Markup_Tool
 {
@@ -10,23 +11,29 @@ namespace Image_Markup_Tool
         private const int TOOL_PANEL_WIDTH = 70;
         private const int LAYER_PANEL_WIDTH = 132;
         
-        // Services
-        private readonly Services.FileService _fileService;
+        // Components
+        private readonly FileHandler _fileHandler;
         
-        // Current loaded image
+        // Current loaded image and file path
         private Image _currentImage;
+        private string _currentFilePath;
 
         public MainForm()
         {
             InitializeComponent();
             
-            // Initialize services
-            _fileService = new Services.FileService();
+            // Initialize components
+            _fileHandler = new FileHandler();
             
             // Apply dark mode theme
             Styles.DarkTheme.ApplyToForm(this);
             Styles.DarkTheme.ApplyToMenuStrip(menuStrip);
             Styles.DarkTheme.ApplyToStatusStrip(statusStrip);
+            
+            // Wire up menu events
+            newFromClipboardToolStripMenuItem.Click += newFromClipboardToolStripMenuItem_Click;
+            saveToolStripMenuItem.Click += saveToolStripMenuItem_Click;
+            exportToolStripMenuItem.Click += exportToolStripMenuItem_Click;
         }
 
         /// <summary>
@@ -52,28 +59,6 @@ namespace Image_Markup_Tool
             // Editor panel fills the remaining space
             editorPanel.Left = toolPanel.Right;
             editorPanel.Width = layerPanel.Left - toolPanel.Right;
-        }
-
-        /// <summary>
-        /// Handles the Open menu item click event
-        /// </summary>
-        private void openToolStripMenuItem_Click(object sender, EventArgs e)
-        {
-            string filePath = _fileService.OpenFile(status => statusLabel.Text = status);
-            
-            if (!string.IsNullOrEmpty(filePath))
-            {
-                // Load the image into the editor
-                Image image = _fileService.LoadImage(filePath);
-                if (image != null)
-                {
-                    // Display the image in the editor
-                    DisplayImage(image);
-                    
-                    // Update window title with filename
-                    this.Text = $"Image Markup Tool - {System.IO.Path.GetFileName(filePath)}";
-                }
-            }
         }
         
         /// <summary>
