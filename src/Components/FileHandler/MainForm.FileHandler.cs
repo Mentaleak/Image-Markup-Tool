@@ -9,39 +9,6 @@ namespace Image_Markup_Tool
 {
     public partial class MainForm : Form
     {
-        // FileMenuControl instance - declared in MainForm.Designer.cs
-        // private Image_Markup_Tool.Components.FileHandler.FileMenuControl fileMenuControl;
-        
-        /// <summary>
-        /// Initializes the file menu control and connects event handlers
-        /// </summary>
-        private void InitializeFileMenu()
-        {
-            // Connect file menu control events to our handlers
-            fileMenuControl.NewFromClipboardRequested += newFromClipboardToolStripMenuItem_Click;
-            fileMenuControl.OpenRequested += openToolStripMenuItem_Click;
-            fileMenuControl.ImportRequested += importToolStripMenuItem_Click;
-            fileMenuControl.SaveRequested += saveToolStripMenuItem_Click;
-            fileMenuControl.SaveAsRequested += saveAsToolStripMenuItem_Click;
-            fileMenuControl.ExportRequested += exportToolStripMenuItem_Click;
-            
-            // Update the initial state of menu items
-            UpdateFileMenuState();
-        }
-        
-        /// <summary>
-        /// Updates the enabled state of file menu items based on current application state
-        /// </summary>
-        private void UpdateFileMenuState()
-        {
-            bool hasImage = _currentImage != null;
-            
-            // Enable/disable menu items based on whether we have an image
-            fileMenuControl.SaveEnabled = hasImage;
-            fileMenuControl.SaveAsEnabled = hasImage;
-            fileMenuControl.ExportEnabled = hasImage;
-        }
-
         /// <summary>
         /// Handles the Open menu item click event (SVG files only)
         /// </summary>
@@ -67,9 +34,6 @@ namespace Image_Markup_Tool
                 
                 // Reset unsaved changes flag
                 _hasUnsavedChanges = false;
-                
-                // Update menu item states
-                UpdateFileMenuState();
             }
         }
         
@@ -98,9 +62,6 @@ namespace Image_Markup_Tool
                 
                 // Reset unsaved changes flag
                 _hasUnsavedChanges = false;
-                
-                // Update menu item states
-                UpdateFileMenuState();
             }
         }
         
@@ -129,9 +90,6 @@ namespace Image_Markup_Tool
                 
                 // Set unsaved changes flag
                 _hasUnsavedChanges = true;
-                
-                // Update menu item states
-                UpdateFileMenuState();
             }
         }
         

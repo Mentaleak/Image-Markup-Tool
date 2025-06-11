@@ -26,9 +26,6 @@ namespace Image_Markup_Tool
         public MainForm()
         {
             InitializeComponent();
-
-            // Connect file menu events to handlers
-            InitializeFileMenu();
             
             // Initialize components
             _fileHandler = new FileHandler();
@@ -38,9 +35,21 @@ namespace Image_Markup_Tool
             Styles.DarkTheme.ApplyToMenuStrip(menuStrip);
             Styles.DarkTheme.ApplyToStatusStrip(statusStrip);
             
-            // REMOVED: Wire up the import menu item click event handler
-            // importToolStripMenuItem.Click += importToolStripMenuItem_Click;
-            // This is now handled by the FileMenuControl
+            // Update menu state
+            UpdateFileMenuState();
+        }
+
+        /// <summary>
+        /// Updates the enabled state of file menu items based on current application state
+        /// </summary>
+        private void UpdateFileMenuState()
+        {
+            bool hasImage = _currentImage != null;
+            
+            // Enable/disable menu items based on whether we have an image
+            saveToolStripMenuItem.Enabled = hasImage;
+            saveAsToolStripMenuItem.Enabled = hasImage;
+            exportToolStripMenuItem.Enabled = hasImage;
         }
 
         /// <summary>
