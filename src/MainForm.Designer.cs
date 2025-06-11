@@ -208,7 +208,7 @@ namespace Image_Markup_Tool
             this.layerPanelLabel.Name = "layerPanelLabel";
             this.layerPanelLabel.Size = new System.Drawing.Size(38, 13);
             this.layerPanelLabel.TabIndex = 0;
-            this.layerPanelLabel.Text = "Layers";
+            
             // 
             // MainForm
             // 
