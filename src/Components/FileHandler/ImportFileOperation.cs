@@ -22,9 +22,15 @@ namespace Image_Markup_Tool.Components.FileHandler
             using (OpenFileDialog openFileDialog = new OpenFileDialog())
             {
                 // Create a filter for raster image formats only (no SVG)
-                string rasterFilter = FileHandlerUtilities.PNG_FILTER + "|" + FileHandlerUtilities.JPG_FILTER;
+                // Start with "All Supported Images" as the default option
+                string allRasterImagesFilter = "All Supported Images|*.png;*.jpg;*.jpeg";
+                string rasterFilter = allRasterImagesFilter + "|" + 
+                                     FileHandlerUtilities.PNG_FILTER + "|" + 
+                                     FileHandlerUtilities.JPG_FILTER;
+                
                 openFileDialog.Filter = rasterFilter;
                 openFileDialog.Title = "Import Image File";
+                openFileDialog.FilterIndex = 1; // Default to "All Supported Images"
 
                 if (openFileDialog.ShowDialog() == DialogResult.OK)
                 {
