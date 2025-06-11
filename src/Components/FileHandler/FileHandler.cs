@@ -10,6 +10,7 @@ namespace Image_Markup_Tool.Components.FileHandler
     {
         // File operation instances
         private readonly OpenFileOperation _openFileOperation;
+        private readonly ImportFileOperation _importFileOperation;
         private readonly NewFromClipboardOperation _newFromClipboardOperation;
         private readonly SaveFileOperation _saveFileOperation;
         private readonly SaveAsFileOperation _saveAsFileOperation;
@@ -21,6 +22,7 @@ namespace Image_Markup_Tool.Components.FileHandler
         public FileHandler()
         {
             _openFileOperation = new OpenFileOperation();
+            _importFileOperation = new ImportFileOperation();
             _newFromClipboardOperation = new NewFromClipboardOperation();
             _saveFileOperation = new SaveFileOperation();
             _saveAsFileOperation = new SaveAsFileOperation();
@@ -28,13 +30,23 @@ namespace Image_Markup_Tool.Components.FileHandler
         }
 
         /// <summary>
-        /// Opens an image file
+        /// Opens an SVG file
         /// </summary>
         /// <param name="statusCallback">Callback to update status after operation</param>
-        /// <returns>Operation result containing the opened image and file path</returns>
+        /// <returns>Operation result containing the opened SVG image and file path</returns>
         public FileOperationResult OpenFile(Action<string> statusCallback = null)
         {
             return _openFileOperation.Execute(null, null, statusCallback);
+        }
+
+        /// <summary>
+        /// Imports a raster image file (PNG, JPG, JPEG)
+        /// </summary>
+        /// <param name="statusCallback">Callback to update status after operation</param>
+        /// <returns>Operation result containing the imported image and file path</returns>
+        public FileOperationResult ImportFile(Action<string> statusCallback = null)
+        {
+            return _importFileOperation.Execute(null, null, statusCallback);
         }
 
         /// <summary>

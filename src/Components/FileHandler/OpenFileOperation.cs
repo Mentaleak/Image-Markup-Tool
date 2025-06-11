@@ -6,12 +6,12 @@ using System.Windows.Forms;
 namespace Image_Markup_Tool.Components.FileHandler
 {
     /// <summary>
-    /// Handles opening image files
+    /// Handles opening SVG files
     /// </summary>
     public class OpenFileOperation : IFileOperation
     {
         /// <summary>
-        /// Execute the open file operation
+        /// Execute the open file operation for SVG files only
         /// </summary>
         /// <param name="currentImage">The current image being edited, if any</param>
         /// <param name="currentFilePath">The current file path, if any</param>
@@ -21,27 +21,38 @@ namespace Image_Markup_Tool.Components.FileHandler
         {
             using (OpenFileDialog openFileDialog = new OpenFileDialog())
             {
-                openFileDialog.Filter = FileHandlerUtilities.COMBINED_FILTER;
-                openFileDialog.Title = "Open Image File";
+                // Only allow SVG files
+                openFileDialog.Filter = FileHandlerUtilities.SVG_FILTER;
+                openFileDialog.Title = "Open SVG File";
 
                 if (openFileDialog.ShowDialog() == DialogResult.OK)
                 {
                     try
                     {
                         string filePath = openFileDialog.FileName;
-                        Image image = LoadImage(filePath);
                         
-                        if (image != null)
+                        // Verify it's an SVG file
+                        string extension = Path.GetExtension(filePath).ToLower();
+                        if (extension != FileHandlerUtilities.SVG_EXTENSION)
                         {
-                            // Call the status callback if provided
-                            statusCallback?.Invoke($"Opened: {Path.GetFileName(filePath)}");
-                            
-                            return FileOperationResult.Successful(image, filePath);
+                            FileHandlerUtilities.ShowError("Only SVG files can be opened with this option. Use Import for other image types.");
+                            return FileOperationResult.Failed();
                         }
+                        
+                        // TODO: Implement SVG loading
+                        FileHandlerUtilities.ShowInfo("SVG loading not yet implemented");
+                        statusCallback?.Invoke($"Attempted to open SVG: {Path.GetFileName(filePath)}");
+                        
+                        // For now, return a failed result since SVG loading is not implemented
+                        return FileOperationResult.Failed();
+                        
+                        // When SVG loading is implemented, return the following:
+                        // Image image = LoadSvgImage(filePath);
+                        // return FileOperationResult.Successful(image, filePath);
                     }
                     catch (Exception ex)
                     {
-                        FileHandlerUtilities.ShowError("Error opening file", ex);
+                        FileHandlerUtilities.ShowError("Error opening SVG file", ex);
                     }
                 }
             }
@@ -50,42 +61,15 @@ namespace Image_Markup_Tool.Components.FileHandler
         }
 
         /// <summary>
-        /// Loads an image from a file
+        /// Loads an SVG image from a file (placeholder for future implementation)
         /// </summary>
-        /// <param name="filePath">Path to the image file</param>
+        /// <param name="filePath">Path to the SVG file</param>
         /// <returns>The loaded image or null if failed</returns>
-        private Image LoadImage(string filePath)
+        private Image LoadSvgImage(string filePath)
         {
-            if (string.IsNullOrEmpty(filePath) || !File.Exists(filePath))
-                return null;
-
-            try
-            {
-                string extension = Path.GetExtension(filePath).ToLower();
-                
-                // Handle different file types
-                switch (extension)
-                {
-                    case FileHandlerUtilities.PNG_EXTENSION:
-                    case FileHandlerUtilities.JPG_EXTENSION:
-                    case FileHandlerUtilities.JPEG_EXTENSION:
-                        return Image.FromFile(filePath);
-                        
-                    case FileHandlerUtilities.SVG_EXTENSION:
-                        // TODO: Implement SVG loading
-                        FileHandlerUtilities.ShowInfo("SVG loading not yet implemented");
-                        return null;
-                        
-                    default:
-                        FileHandlerUtilities.ShowError($"Unsupported file format: {extension}");
-                        return null;
-                }
-            }
-            catch (Exception ex)
-            {
-                FileHandlerUtilities.ShowError("Error loading image", ex);
-                return null;
-            }
+            // TODO: Implement SVG loading
+            // This would involve using a library like SVG.NET or similar
+            return null;
         }
     }
 }
